@@ -8,6 +8,17 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - run: npm install
-      - run: npm run dist
+      - name: Build
+        shell: bash
+        run: |
+          set +e
+          npm run dist > build.log 2>&1
+          code=$?
+          if [ $code -ne 0 ]; then
+            echo "::error::$(grep -i -E 'error|cannot|failed|not found' build.log | head -8 | tr '\n' ' ' | cut -c1-900)"
+            tail -25 build.log
+            exit 1
+          fi
+          cat build.log | tail -15
       - uses: actions/upload-artifact@v4
         with: { name: instalador-windows, path: dist/*.exe }
