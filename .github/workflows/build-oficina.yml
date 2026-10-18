@@ -1,0 +1,29 @@
+name: Build Oficina installer
+on: { workflow_dispatch: {} }
+permissions:
+  contents: write
+jobs:
+  win:
+    runs-on: windows-latest
+    defaults: { run: { working-directory: oficina } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm install
+      - name: Build
+        shell: bash
+        run: |
+          set +e
+          npm run dist > build.log 2>&1
+          code=$?
+          if [ $code -ne 0 ]; then
+            echo "::error::$(grep -i -E 'error|cannot|failed|not found' build.log | head -8 | tr '\n' ' ' | cut -c1-900)"
+            tail -25 build.log; exit 1
+          fi
+          tail -10 build.log
+      - name: Publicar na aba Releases
+        shell: bash
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          gh release create "oficina-v${{ github.run_number }}" dist/*.exe --title "Agenda Oficina - instalador (build ${{ github.run_number }})" --notes "Baixe o .exe abaixo e dê dois cliques para instalar. Sem senha e sem ativação." --repo "${{ github.repository }}"
