@@ -1,0 +1,17 @@
+GESTÃO FINANCEIRA  -  Contas a Pagar, Contas a Receber e Fluxo de Caixa
+========================================================================
+COMO GERAR O INSTALADOR (uma vez, em um PC com Windows e internet)
+ 1. Instale o Node.js LTS: https://nodejs.org
+ 2. Extraia esta pasta e dê dois cliques em  Criar-Instalador.bat
+ 3. Ao final, a pasta "dist" terá  "Gestão Financeira Setup 1.0.0.exe"  -> é o instalador.
+ (Para só testar sem instalar: Testar-Sem-Instalar.bat)
+
+MÓDULOS
+ Painel .......... saldo, atrasos, próximos vencimentos e gráfico anual
+ Contas a Pagar .. cadastro, parcelas mensais, pagar/desfazer, filtros, exportar CSV
+ Contas a Receber  idem, com "recebe hoje" e atrasados
+ Fluxo de Caixa .. tabela mensal/anual igual à planilha + gráfico (calculado sozinho)
+ Categorias ...... categorias de pagar/receber e formas de pagamento
+ Configurações ... alertas, backup (automático diário + manual), importar planilha .xlsm
+
+DADOS: ficam em %APPDATA%\Gestão Financeira\dados.json (backups em \backups).

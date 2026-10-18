@@ -1,0 +1,420 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gestão Financeira</title><style>:root{--bg:#f4f6fa;--card:#fff;--ink:#1c2433;--mute:#6b7689;--line:#e3e8f0;--brand:#2563eb;--brand-d:#1d4ed8;--ok:#16a34a;--bad:#dc2626;--warn:#d97706;--side:#0f1b33;--okbg:#dcfce7;--badbg:#fee2e2;--warnbg:#fef3c7;--infobg:#e0e7ff}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1420;--card:#172033;--ink:#e6ebf5;--mute:#93a0b8;--line:#26314a;--side:#0a1020;--okbg:#14352333;--badbg:#4c1d1d55;--warnbg:#4a371055;--infobg:#25306355}}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.45 "Segoe UI",system-ui,sans-serif;color:var(--ink);background:var(--bg);display:flex;height:100vh;overflow:hidden}
+#sidebar{width:230px;background:var(--side);color:#cfd8ea;display:flex;flex-direction:column;padding:18px 12px;flex-shrink:0}
+.brand{display:flex;gap:10px;align-items:center;padding:0 8px 20px;color:#fff}
+.brand .logo{width:38px;height:38px;border-radius:10px;background:var(--brand);display:grid;place-items:center;font-weight:700;font-size:20px}
+.brand b{display:block;font-size:16px;line-height:1.1}.brand small{color:#8fa0c0}
+#nav button{display:flex;gap:11px;align-items:center;width:100%;border:0;background:none;color:inherit;padding:10px 12px;border-radius:9px;font:inherit;cursor:pointer;text-align:left;margin-bottom:2px}
+#nav button:hover{background:#ffffff14}#nav button.on{background:var(--brand);color:#fff}
+#nav .ico{width:20px;text-align:center}
+.side-foot{margin-top:auto;font-size:12px;color:#7d8caa;padding:0 10px}
+#main{flex:1;overflow:auto;padding:26px 32px}
+h1{margin:0 0 4px;font-size:24px}.sub{color:var(--mute);margin:0 0 20px}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.kpi small{color:var(--mute);display:block;margin-bottom:4px}.kpi b{font-size:22px}
+.kpi.ok b{color:var(--ok)}.kpi.bad b{color:var(--bad)}.kpi.warn b{color:var(--warn)}
+.grid2{display:grid;grid-template-columns:2fr 1fr;gap:14px}@media(max-width:1150px){.grid2{grid-template-columns:1fr}}
+.card h3{margin:0 0 12px;font-size:15px}
+button.btn,.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:8px;font:inherit;cursor:pointer}
+.btn:hover{border-color:var(--brand)}.btn.pri{background:var(--brand);border-color:var(--brand);color:#fff}.btn.pri:hover{background:var(--brand-d)}
+.btn.danger{color:var(--bad)}.btn.sm{padding:4px 9px;font-size:12.5px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+input,select{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+input:focus,select:focus{outline:2px solid var(--brand);outline-offset:-1px}
+.tools input[type=search]{width:240px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mute);padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--line)}tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#80808010}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tw{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:auto}
+.pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:600}
+.p-ok{background:var(--okbg);color:var(--ok)}.p-bad{background:var(--badbg);color:var(--bad)}.p-warn{background:var(--warnbg);color:var(--warn)}.p-info{background:var(--infobg);color:var(--brand)}
+.empty{padding:36px;text-align:center;color:var(--mute)}
+.act{white-space:nowrap;text-align:right}
+.pos{color:var(--ok)}.neg{color:var(--bad)}
+#modalRoot .ov{position:fixed;inset:0;background:#0008;display:grid;place-items:center;z-index:10}
+.modal{background:var(--card);border-radius:14px;padding:22px;width:min(520px,92vw);max-height:90vh;overflow:auto}
+.modal h2{margin:0 0 14px;font-size:18px}
+.f{display:grid;gap:12px}.f label{display:grid;gap:4px;font-size:12.5px;color:var(--mute)}.f .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.f label input,.f label select{color:var(--ink);font-size:14px}
+.mf{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+#toast{position:fixed;bottom:22px;right:22px;background:#111c;color:#fff;padding:10px 16px;border-radius:9px;opacity:0;transition:.25s;pointer-events:none;backdrop-filter:blur(4px)}
+#toast.show{opacity:1}
+.list li{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);list-style:none}.list{margin:0;padding:0}.list li:last-child{border:0}
+.list small{color:var(--mute);display:block}
+.cols3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.tag{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px}
+.addrow{display:flex;gap:6px;margin-top:10px}.addrow input{flex:1}
+.switch{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.switch:last-child{border:0}.switch small{display:block;color:var(--mute)}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--brand)}
+.legend{display:flex;gap:16px;font-size:12.5px;color:var(--mute);margin-top:6px}.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}
+svg text{fill:var(--mute);font-size:11px}
+tr.total td{font-weight:700;background:#80808012}
+.cf td:first-child,.cf th:first-child{position:sticky;left:0;background:var(--card);font-weight:600}
+</style></head><body>
+<aside id="sidebar"><div class="brand"><span class="logo">$</span><div><b>Gestão</b><small>Financeira</small></div></div><nav id="nav"></nav><div class="side-foot"><span id="saveState">Dados salvos</span></div></aside>
+<main id="main"></main><div id="modalRoot"></div><div id="toast"></div><script>
+window.api={
+ load:async()=>{try{return JSON.parse(localStorage.getItem('gestao-financeira-dados'))}catch(e){return null}},
+ save:async d=>{localStorage.setItem('gestao-financeira-dados',JSON.stringify(d));return true},
+ saveText:async({text,name})=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));a.download=name;a.click();return name},
+ openText:()=>new Promise(r=>{const i=document.createElement('input');i.type='file';i.accept='.json';i.onchange=()=>i.files[0]?i.files[0].text().then(r):r(null);i.click()}),
+ notify:async({title,body})=>{try{if(Notification.permission==='default')await Notification.requestPermission();if(Notification.permission==='granted')new Notification(title,{body})}catch(e){}},
+ importXlsx:async()=>{alert('A importação da planilha só existe na versão instalável. Nesta versão, cadastre os lançamentos manualmente.');return null}
+};
+// ===== Núcleo: estado, utilitários, roteamento =====
+const App = {
+  db: null, modules: {}, current: null,
+  defaults() {
+    const y = new Date().getFullYear();
+    return {
+      version: 1,
+      settings: { year: y, openingBalance: 0, alertDays: 7, alerts: { atrasadas: true, vencendo: true, recebimentoDia: true, recebimentosAtrasados: true } },
+      categories: {
+        pagar: ['Fornecedores', 'Aluguel', 'Impostos', 'Salários', 'Energia/Água', 'Outros'],
+        receber: ['Vendas', 'Serviços', 'Outros'],
+        formas: ['Boleto', 'PIX', 'Cartão', 'Dinheiro', 'Transferência']
+      },
+      payables: [], receivables: []
+    };
+  },
+  async start() {
+    const saved = await api.load();
+    const d = this.defaults();
+    this.db = saved ? { ...d, ...saved, settings: { ...d.settings, ...saved.settings, alerts: { ...d.settings.alerts, ...(saved.settings || {}).alerts } }, categories: { ...d.categories, ...saved.categories } } : d;
+    if (!saved) await this.save();
+    this.buildNav();
+    this.go('dashboard');
+    setTimeout(() => this.alertsOnStart(), 1200);
+  },
+  async save() {
+    const el = $('#saveState'); el.textContent = 'Salvando…';
+    await api.save(this.db); el.textContent = 'Dados salvos';
+  },
+  register(id, mod) { this.modules[id] = mod; },
+  buildNav() {
+    const items = [['dashboard', '📊', 'Painel'], ['payables', '📤', 'Contas a Pagar'], ['receivables', '📥', 'Contas a Receber'], ['cashflow', '📈', 'Fluxo de Caixa'], ['categories', '🏷️', 'Categorias'], ['settings', '⚙️', 'Configurações']];
+    $('#nav').innerHTML = items.map(([id, i, t]) => `<button data-id="${id}"><span class="ico">${i}</span>${t}</button>`).join('');
+    $('#nav').onclick = e => { const b = e.target.closest('button'); if (b) this.go(b.dataset.id); };
+  },
+  go(id) {
+    this.current = id;
+    document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.id === id));
+    this.render();
+  },
+  render() { const m = this.modules[this.current]; $('#main').innerHTML = ''; m.render($('#main')); $('#main').scrollTop = 0; },
+  alertsOnStart() {
+    const s = this.db.settings, a = s.alerts, t = Fin.today();
+    const msgs = [];
+    const pay = this.db.payables.filter(x => !x.pago), rec = this.db.receivables.filter(x => !x.pago);
+    const late = pay.filter(x => x.data && x.data < t), soon = pay.filter(x => x.data && x.data >= t && Fin.diffDays(t, x.data) <= s.alertDays);
+    const today = rec.filter(x => x.data === t), recLate = rec.filter(x => x.data && x.data < t);
+    if (a.atrasadas && late.length) msgs.push(`${late.length} conta(s) a pagar atrasada(s): ${Fin.brl(Fin.sum(late))}`);
+    if (a.vencendo && soon.length) msgs.push(`${soon.length} conta(s) vencendo em até ${s.alertDays} dias: ${Fin.brl(Fin.sum(soon))}`);
+    if (a.recebimentoDia && today.length) msgs.push(`${today.length} recebimento(s) previsto(s) para hoje: ${Fin.brl(Fin.sum(today))}`);
+    if (a.recebimentosAtrasados && recLate.length) msgs.push(`${recLate.length} recebimento(s) atrasado(s): ${Fin.brl(Fin.sum(recLate))}`);
+    if (msgs.length) { api.notify({ title: 'Gestão Financeira — Alertas', body: msgs.join('\n') }); toast(msgs[0] + (msgs.length > 1 ? ` (+${msgs.length - 1})` : '')); }
+  }
+};
+
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 3500); }
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+const Fin = {
+  brl: v => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0),
+  today() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; },
+  date: s => s ? s.split('-').reverse().join('/') : '—',
+  diffDays: (a, b) => Math.round((new Date(b + 'T12:00') - new Date(a + 'T12:00')) / 864e5),
+  sum: l => l.reduce((a, x) => a + (Number(x.valor) || 0), 0),
+  months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+  // situação das contas (mesma regra da planilha original)
+  statusPay(x) {
+    if (x.pago) return ['Paga', 'ok'];
+    if (!x.data) return ['Sem data', 'info'];
+    const t = Fin.today();
+    if (x.data < t) return ['Atrasada', 'bad'];
+    if (Fin.diffDays(t, x.data) <= App.db.settings.alertDays) return ['Vencendo', 'warn'];
+    return ['No prazo', 'info'];
+  },
+  statusRec(x) {
+    if (x.pago) return ['Recebido', 'ok'];
+    if (!x.data) return ['Sem data', 'info'];
+    const t = Fin.today();
+    if (x.data === t) return ['Recebe hoje', 'warn'];
+    if (x.data < t) return ['Atrasado', 'bad'];
+    return ['A receber', 'info'];
+  },
+  // data de realização (caixa): data efetiva, ou a data de vencimento
+  cashDate: x => x.dataPgto || x.data,
+  monthly(year) {
+    const r = Array.from({ length: 12 }, () => ({ rec: 0, desp: 0, recPrev: 0, despPrev: 0 }));
+    const add = (list, k, kp) => list.forEach(x => {
+      const d = x.pago ? Fin.cashDate(x) : x.data; if (!d || +d.slice(0, 4) !== year) return;
+      r[+d.slice(5, 7) - 1][x.pago ? k : kp] += Number(x.valor) || 0;
+    });
+    add(App.db.receivables, 'rec', 'recPrev'); add(App.db.payables, 'desp', 'despPrev');
+    return r;
+  }
+};
+
+// ===== Modal / formulários =====
+function modal(title, html, onOk, okText = 'Salvar') {
+  const root = $('#modalRoot');
+  root.innerHTML = `<div class="ov"><form class="modal"><h2>${title}</h2>${html}<div class="mf"><button type="button" class="btn" data-x>Cancelar</button>${onOk ? `<button class="btn pri">${okText}</button>` : ''}</div></form></div>`;
+  const close = () => root.innerHTML = '';
+  root.querySelector('[data-x]').onclick = close;
+  root.querySelector('.ov').onmousedown = e => { if (e.target.classList.contains('ov')) close(); };
+  const f = root.querySelector('form');
+  f.onsubmit = e => { e.preventDefault(); if (onOk) { const ok = onOk(Object.fromEntries(new FormData(f))); if (ok !== false) close(); } };
+  const first = f.querySelector('input,select'); if (first) first.focus();
+  return close;
+}
+function confirmBox(msg, onYes) { modal('Confirmar', `<p>${msg}</p>`, () => { onYes(); }, 'Confirmar'); }
+function download(text, name, type) { return api.saveText({ text, name, filters: [{ name: type, extensions: [name.split('.').pop()] }] }); }
+
+// Fábrica de módulo de contas (usada por Pagar e Receber)
+function makeAccountsModule(c) {
+  const st = { q: '', status: '', month: '', sort: 'data' };
+  const list = () => App.db[c.key];
+  function render(root) {
+    const all = list();
+    const open = all.filter(x => !x.pago);
+    const late = open.filter(x => c.status(x)[0].startsWith('Atras'));
+    root.innerHTML = `
+    <div class="head"><div><h1>${c.title}</h1><p class="sub">${c.sub}</p></div>
+      <div><button class="btn" id="exp">Exportar CSV</button> <button class="btn pri" id="add">+ ${c.newLabel}</button></div></div>
+    <div class="cards">
+      <div class="card kpi ${c.kind === 'pay' ? 'warn' : 'ok'}"><small>${c.openLabel}</small><b>${Fin.brl(Fin.sum(open))}</b></div>
+      <div class="card kpi bad"><small>Em atraso</small><b>${Fin.brl(Fin.sum(late))}</b><small>${late.length} lançamento(s)</small></div>
+      <div class="card kpi"><small>${c.doneLabel} (total)</small><b>${Fin.brl(Fin.sum(all.filter(x => x.pago)))}</b></div>
+    </div>
+    <div class="tools">
+      <input type="search" id="q" placeholder="🔍 Buscar descrição ou categoria…" value="${esc(st.q)}">
+      <select id="fs"><option value="">Todas as situações</option>${c.statuses.map(s => `<option ${st.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select>
+      <select id="fm"><option value="">Todos os meses</option>${Fin.months.map((m, i) => `<option value="${i + 1}" ${st.month == i + 1 ? 'selected' : ''}>${m}</option>`).join('')}</select>
+    </div>
+    <div class="tw"><table><thead><tr><th>Descrição</th><th>Categoria</th><th>Forma</th><th class="num">Valor</th><th>${c.dateLabel}</th><th>Situação</th><th></th></tr></thead><tbody id="tb"></tbody></table></div>`;
+    $('#add').onclick = () => form();
+    $('#q').oninput = e => { st.q = e.target.value; rows(); };
+    $('#fs').onchange = e => { st.status = e.target.value; rows(); };
+    $('#fm').onchange = e => { st.month = e.target.value; rows(); };
+    $('#exp').onclick = exportCsv;
+    rows();
+  }
+  function filtered() {
+    const q = st.q.toLowerCase();
+    return list().filter(x => (!q || (x.desc + ' ' + x.cat).toLowerCase().includes(q)) && (!st.status || c.status(x)[0] === st.status) && (!st.month || (x.data && +x.data.slice(5, 7) === +st.month)))
+      .sort((a, b) => (a.data || '9').localeCompare(b.data || '9'));
+  }
+  function rows() {
+    const l = filtered(), tb = $('#tb');
+    if (!l.length) { tb.innerHTML = `<tr><td colspan="7" class="empty">Nenhum lançamento encontrado.<br>Clique em <b>+ ${c.newLabel}</b> para começar.</td></tr>`; return; }
+    tb.innerHTML = l.map(x => { const [s, k] = c.status(x); return `<tr>
+      <td><b>${esc(x.desc)}</b></td><td>${esc(x.cat) || '—'}</td><td>${esc(x.forma) || '—'}</td>
+      <td class="num">${Fin.brl(x.valor)}</td><td>${Fin.date(x.data)}</td><td><span class="pill p-${k}">${s}</span></td>
+      <td class="act"><button class="btn sm" data-a="t" data-id="${x.id}">${x.pago ? 'Desfazer' : c.doneAction}</button>
+      <button class="btn sm" data-a="e" data-id="${x.id}">Editar</button>
+      <button class="btn sm danger" data-a="d" data-id="${x.id}">Excluir</button></td></tr>`; }).join('') +
+      `<tr class="total"><td colspan="3">Total (${l.length})</td><td class="num">${Fin.brl(Fin.sum(l))}</td><td colspan="3"></td></tr>`;
+    tb.onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      const x = list().find(i => i.id === b.dataset.id);
+      if (b.dataset.a === 'e') form(x);
+      if (b.dataset.a === 'd') confirmBox(`Excluir "${esc(x.desc)}"?`, async () => { App.db[c.key] = list().filter(i => i !== x); await App.save(); App.render(); toast('Lançamento excluído'); });
+      if (b.dataset.a === 't') toggle(x);
+    };
+  }
+  function toggle(x) {
+    if (x.pago) { x.pago = false; delete x.dataPgto; App.save(); App.render(); return; }
+    modal(c.doneAction, `<div class="f"><label>${c.doneDate}<input type="date" name="dp" value="${Fin.today()}" required></label></div>`, async v => {
+      x.pago = true; x.dataPgto = v.dp; await App.save(); App.render(); toast(c.doneToast);
+    }, 'Confirmar');
+  }
+  function form(x) {
+    const cats = App.db.categories[c.catKey], formas = App.db.categories.formas;
+    const opt = (arr, val) => `<option value="">— selecione —</option>` + [...new Set([...arr, val].filter(Boolean))].map(o => `<option ${o === val ? 'selected' : ''}>${esc(o)}</option>`).join('');
+    modal(x ? 'Editar lançamento' : c.newLabel, `<div class="f">
+      <label>Descrição<input name="desc" required value="${esc(x?.desc)}" placeholder="Ex.: ${c.example}"></label>
+      <div class="row"><label>Categoria<select name="cat">${opt(cats, x?.cat)}</select></label>
+      <label>Forma<select name="forma">${opt(formas, x?.forma)}</select></label></div>
+      <div class="row"><label>Valor (R$)<input name="valor" type="number" step="0.01" min="0" required value="${x?.valor ?? ''}"></label>
+      <label>${c.dateLabel}<input name="data" type="date" required value="${x?.data || Fin.today()}"></label></div>
+      ${!x ? `<label>Repetir (parcelas mensais)<input name="rep" type="number" min="1" max="60" value="1"></label>` : ''}
+    </div>`, async v => {
+      const base = { desc: v.desc.trim(), cat: v.cat, forma: v.forma, valor: parseFloat(v.valor) || 0, data: v.data };
+      if (x) Object.assign(x, base);
+      else {
+        const n = Math.max(1, Math.min(60, +v.rep || 1));
+        for (let i = 0; i < n; i++) {
+          const d = new Date(v.data + 'T12:00'); const day = d.getDate(); d.setDate(1); d.setMonth(d.getMonth() + i);
+          const last = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate(); d.setDate(Math.min(day, last));
+          list().push({ id: uid(), ...base, desc: n > 1 ? `${base.desc} (${i + 1}/${n})` : base.desc, data: d.toISOString().slice(0, 10), pago: false });
+        }
+      }
+      await App.save(); App.render(); toast('Lançamento salvo');
+    });
+  }
+  function exportCsv() {
+    const l = filtered();
+    const csv = ['Descrição;Categoria;Forma;Valor;Data;Situação', ...l.map(x => [x.desc, x.cat, x.forma, String(x.valor).replace('.', ','), Fin.date(x.data), c.status(x)[0]].map(s => `"${String(s ?? '').replace(/"/g, '""')}"`).join(';'))].join('\r\n');
+    download('﻿' + csv, c.file, 'CSV').then(r => r && toast('Arquivo exportado'));
+  }
+  return { render };
+}
+
+App.register('dashboard', {
+  render(root) {
+    const S = App.db.settings, t = Fin.today(), m = Fin.monthly(S.year);
+    const pay = App.db.payables.filter(x => !x.pago), rec = App.db.receivables.filter(x => !x.pago);
+    const balance = S.openingBalance + m.reduce((a, x) => a + x.rec - x.desp, 0);
+    const late = pay.filter(x => x.data && x.data < t), recLate = rec.filter(x => x.data && x.data < t);
+    const next = [
+      ...pay.filter(x => x.data && x.data >= t && Fin.diffDays(t, x.data) <= 15).map(x => ({ ...x, tipo: 'pay' })),
+      ...rec.filter(x => x.data && x.data >= t && Fin.diffDays(t, x.data) <= 15).map(x => ({ ...x, tipo: 'rec' }))
+    ].sort((a, b) => a.data.localeCompare(b.data)).slice(0, 8);
+    const lateAll = [...late.map(x => ({ ...x, tipo: 'pay' })), ...recLate.map(x => ({ ...x, tipo: 'rec' }))].sort((a, b) => a.data.localeCompare(b.data)).slice(0, 8);
+    const li = x => `<li><div><b>${esc(x.desc)}</b><small>${x.tipo === 'pay' ? '📤 Pagar' : '📥 Receber'} · ${Fin.date(x.data)}</small></div><b class="${x.tipo === 'pay' ? 'neg' : 'pos'}">${x.tipo === 'pay' ? '−' : '+'}${Fin.brl(x.valor)}</b></li>`;
+    const hello = new Date().getHours() < 12 ? 'Bom dia' : new Date().getHours() < 18 ? 'Boa tarde' : 'Boa noite';
+    root.innerHTML = `<div class="head"><div><h1>${hello}! 👋</h1><p class="sub">Resumo financeiro de ${S.year} — hoje é ${Fin.date(t)}.</p></div>
+      <div><button class="btn" data-go="payables">+ Conta a pagar</button> <button class="btn pri" data-go="receivables">+ Recebimento</button></div></div>
+    <div class="cards">
+      <div class="card kpi ${balance < 0 ? 'bad' : 'ok'}"><small>Saldo atual em caixa</small><b>${Fin.brl(balance)}</b></div>
+      <div class="card kpi warn"><small>A pagar em aberto</small><b>${Fin.brl(Fin.sum(pay))}</b><small>${pay.length} conta(s)</small></div>
+      <div class="card kpi ok"><small>A receber em aberto</small><b>${Fin.brl(Fin.sum(rec))}</b><small>${rec.length} conta(s)</small></div>
+      <div class="card kpi bad"><small>Atrasos</small><b>${late.length + recLate.length}</b><small>${late.length} a pagar · ${recLate.length} a receber</small></div></div>
+    <div class="grid2"><div class="card"><h3>Fluxo de caixa ${S.year}</h3>${cashChart(m, 760, 240)}</div>
+    <div style="display:grid;gap:14px;align-content:start">
+      <div class="card"><h3>⚠️ Atrasados</h3><ul class="list">${lateAll.map(li).join('') || '<p class="sub" style="margin:0">Tudo em dia 🎉</p>'}</ul></div>
+      <div class="card"><h3>📅 Próximos 15 dias</h3><ul class="list">${next.map(li).join('') || '<p class="sub" style="margin:0">Nada previsto.</p>'}</ul></div></div></div>`;
+    root.onclick = e => { const b = e.target.closest('[data-go]'); if (b) App.go(b.dataset.go); };
+  }
+});
+
+App.register('payables', makeAccountsModule({
+  key: 'payables', kind: 'pay', catKey: 'pagar', title: 'Contas a Pagar', sub: 'Controle seus compromissos e nunca perca um vencimento.',
+  newLabel: 'Nova conta a pagar', openLabel: 'Total em aberto a pagar', doneLabel: 'Já pago', dateLabel: 'Vencimento',
+  doneAction: 'Pagar', doneDate: 'Data do pagamento', doneToast: 'Pagamento registrado', example: 'Fornecedor, aluguel…',
+  status: Fin.statusPay, statuses: ['Atrasada', 'Vencendo', 'No prazo', 'Paga'], file: 'contas-a-pagar.csv'
+}));
+
+App.register('receivables', makeAccountsModule({
+  key: 'receivables', kind: 'rec', catKey: 'receber', title: 'Contas a Receber', sub: 'Acompanhe tudo que seus clientes ainda vão pagar.',
+  newLabel: 'Novo recebimento', openLabel: 'Total em aberto a receber', doneLabel: 'Já recebido', dateLabel: 'Data prevista',
+  doneAction: 'Receber', doneDate: 'Data do recebimento', doneToast: 'Recebimento registrado', example: 'Cliente, venda…',
+  status: Fin.statusRec, statuses: ['Atrasado', 'Recebe hoje', 'A receber', 'Recebido'], file: 'contas-a-receber.csv'
+}));
+
+function cashChart(m, w = 760, h = 260) {
+  const pad = { l: 56, r: 12, t: 12, b: 26 }, iw = w - pad.l - pad.r, ih = h - pad.t - pad.b;
+  const bal = []; let acc = App.db.settings.openingBalance; m.forEach(x => { acc += x.rec - x.desp; bal.push(acc); });
+  const vals = [...m.flatMap(x => [x.rec, x.desp]), ...bal, 0];
+  const max = Math.max(...vals), min = Math.min(...vals), span = (max - min) || 1;
+  const y = v => pad.t + ih - ((v - min) / span) * ih, bw = iw / 12;
+  const short = v => Math.abs(v) >= 1e3 ? (v / 1e3).toFixed(Math.abs(v) >= 1e4 ? 0 : 1).replace('.', ',') + 'k' : Math.round(v);
+  let s = `<svg viewBox="0 0 ${w} ${h}" width="100%" role="img" aria-label="Receitas, despesas e saldo por mês">`;
+  for (let i = 0; i <= 4; i++) { const v = min + span * i / 4; s += `<line x1="${pad.l}" x2="${w - pad.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${pad.l - 6}" y="${y(v) + 4}" text-anchor="end">${short(v)}</text>`; }
+  m.forEach((x, i) => {
+    const cx = pad.l + i * bw;
+    s += `<rect x="${cx + bw * .14}" width="${bw * .34}" y="${Math.min(y(x.rec), y(0))}" height="${Math.abs(y(0) - y(x.rec))}" fill="#16a34a" rx="2"><title>${Fin.months[i]} — Receitas: ${Fin.brl(x.rec)}</title></rect>`;
+    s += `<rect x="${cx + bw * .5}" width="${bw * .34}" y="${Math.min(y(x.desp), y(0))}" height="${Math.abs(y(0) - y(x.desp))}" fill="#dc2626" rx="2"><title>${Fin.months[i]} — Despesas: ${Fin.brl(x.desp)}</title></rect>`;
+    s += `<text x="${cx + bw / 2}" y="${h - 8}" text-anchor="middle">${Fin.months[i].slice(0, 3)}</text>`;
+  });
+  s += `<polyline fill="none" stroke="#2563eb" stroke-width="2.2" points="${bal.map((v, i) => `${pad.l + i * bw + bw / 2},${y(v)}`).join(' ')}"/>` +
+    bal.map((v, i) => `<circle cx="${pad.l + i * bw + bw / 2}" cy="${y(v)}" r="3.5" fill="#2563eb"><title>${Fin.months[i]} — Saldo: ${Fin.brl(v)}</title></circle>`).join('');
+  return s + `</svg><div class="legend"><span><i style="background:#16a34a"></i>Receitas</span><span><i style="background:#dc2626"></i>Despesas</span><span><i style="background:#2563eb"></i>Saldo acumulado</span></div>`;
+}
+
+App.register('cashflow', {
+  render(root) {
+    const S = App.db.settings, m = Fin.monthly(S.year);
+    const cls = v => v < 0 ? 'neg' : '';
+    let acc = S.openingBalance; const ini = [], fim = [];
+    m.forEach(x => { ini.push(acc); acc += x.rec - x.desp; fim.push(acc); });
+    const T = k => m.reduce((a, x) => a + x[k], 0);
+    const row = (label, f, tot, opt = {}) => `<tr class="${opt.cls || ''}"><td>${label}</td>${m.map((x, i) => `<td class="num ${opt.sign ? cls(f(x, i)) : ''}">${opt.pct ? (f(x, i) * 100).toFixed(1) + '%' : Fin.brl(f(x, i))}</td>`).join('')}<td class="num ${opt.sign ? cls(tot) : ''}"><b>${opt.pct ? (tot * 100).toFixed(1) + '%' : Fin.brl(tot)}</b></td></tr>`;
+    const margin = (x) => x.rec ? (x.rec - x.desp) / x.rec : 0;
+    root.innerHTML = `<div class="head"><div><h1>Fluxo de Caixa</h1><p class="sub">Calculado automaticamente a partir das contas <b>pagas</b> e <b>recebidas</b>.</p></div>
+      <div class="tools" style="margin:0"><label>Ano <input type="number" id="yr" value="${S.year}" style="width:90px"></label>
+      <label>Saldo inicial <input type="number" step="0.01" id="ob" value="${S.openingBalance}" style="width:130px"></label></div></div>
+    <div class="cards">
+      <div class="card kpi ok"><small>Receitas realizadas</small><b>${Fin.brl(T('rec'))}</b></div>
+      <div class="card kpi bad"><small>Despesas realizadas</small><b>${Fin.brl(T('desp'))}</b></div>
+      <div class="card kpi ${T('rec') - T('desp') < 0 ? 'bad' : 'ok'}"><small>Resultado do ano</small><b>${Fin.brl(T('rec') - T('desp'))}</b></div>
+      <div class="card kpi"><small>Saldo final projetado</small><b>${Fin.brl(fim[11])}</b></div></div>
+    <div class="card" style="margin-bottom:14px"><h3>Visão mensal</h3>${cashChart(m)}</div>
+    <div class="tw"><table class="cf"><thead><tr><th>${S.year}</th>${Fin.months.map(n => `<th class="num">${n.slice(0, 3)}</th>`).join('')}<th class="num">Anual</th></tr></thead><tbody>
+      ${row('Saldo inicial', (x, i) => ini[i], S.openingBalance)}
+      ${row('Receitas', x => x.rec, T('rec'))}
+      ${row('Despesas', x => x.desp, T('desp'))}
+      ${row('Lucro', x => x.rec - x.desp, T('rec') - T('desp'), { sign: 1, cls: 'total' })}
+      ${row('Saldo acumulado', (x, i) => fim[i], fim[11], { sign: 1, cls: 'total' })}
+      ${row('Lucratividade', margin, T('rec') ? (T('rec') - T('desp')) / T('rec') : 0, { pct: 1, sign: 1 })}
+      ${row('A receber (previsto)', x => x.recPrev, T('recPrev'))}
+      ${row('A pagar (previsto)', x => x.despPrev, T('despPrev'))}
+    </tbody></table></div>`;
+    $('#yr').onchange = async e => { S.year = +e.target.value || S.year; await App.save(); App.render(); };
+    $('#ob').onchange = async e => { S.openingBalance = parseFloat(e.target.value) || 0; await App.save(); App.render(); };
+  }
+});
+
+App.register('categories', {
+  render(root) {
+    const groups = [['pagar', 'Categorias de contas a pagar'], ['receber', 'Categorias de contas a receber'], ['formas', 'Formas de pagamento / recebimento']];
+    root.innerHTML = `<div class="head"><div><h1>Categorias</h1><p class="sub">Organize seus lançamentos. As listas aparecem nos formulários.</p></div></div>
+    <div class="cols3">${groups.map(([k, t]) => `<div class="card"><h3>${t}</h3><div>${App.db.categories[k].map((n, i) => `<div class="tag"><span>${esc(n)}</span><button class="btn sm danger" data-k="${k}" data-i="${i}">✕</button></div>`).join('') || '<p class="sub">Nenhuma ainda.</p>'}</div>
+      <form class="addrow" data-k="${k}"><input placeholder="Nova…" required><button class="btn pri">Adicionar</button></form></div>`).join('')}</div>`;
+    root.onclick = async e => { const b = e.target.closest('button[data-i]'); if (!b) return; App.db.categories[b.dataset.k].splice(+b.dataset.i, 1); await App.save(); App.render(); };
+    root.onsubmit = async e => { e.preventDefault(); const f = e.target, v = f.querySelector('input').value.trim(), l = App.db.categories[f.dataset.k]; if (v && !l.includes(v)) l.push(v); await App.save(); App.render(); };
+  }
+});
+
+App.register('settings', {
+  render(root) {
+    const S = App.db.settings, A = S.alerts;
+    const sw = (k, t, d) => `<div class="switch"><div>${t}<small>${d}</small></div><input type="checkbox" data-k="${k}" ${A[k] ? 'checked' : ''}></div>`;
+    root.innerHTML = `<div class="head"><div><h1>Configurações</h1><p class="sub">Alertas, backup e importação de dados.</p></div></div>
+    <div class="cols3">
+      <div class="card"><h3>🔔 Alertas ao abrir o programa</h3>
+        ${sw('atrasadas', 'Pagamentos atrasados', 'Avisa contas a pagar vencidas')}
+        ${sw('vencendo', 'Pagamentos vencendo', 'Contas que vencem em breve')}
+        ${sw('recebimentoDia', 'Recebimento do dia', 'Recebimentos previstos para hoje')}
+        ${sw('recebimentosAtrasados', 'Recebimentos atrasados', 'Clientes que ainda não pagaram')}
+        <div class="switch"><div>Dias para “vencendo”<small>Antecedência do alerta</small></div><input type="number" id="ad" min="1" max="60" value="${S.alertDays}" style="width:80px"></div></div>
+      <div class="card"><h3>💾 Backup</h3><p class="sub">Uma cópia automática é feita todo dia (últimos 15 dias). Você também pode salvar uma cópia manual.</p>
+        <button class="btn" id="bk">Exportar backup</button> <button class="btn" id="rs">Restaurar backup</button></div>
+      <div class="card"><h3>📑 Importar da planilha Excel</h3><p class="sub">Traz contas a pagar, a receber, categorias, ano e saldo inicial da planilha antiga (.xlsx/.xlsm). Os dados importados são <b>adicionados</b> aos atuais.</p>
+        <button class="btn pri" id="im">Importar planilha…</button></div></div>`;
+    root.onchange = async e => {
+      if (e.target.dataset.k) A[e.target.dataset.k] = e.target.checked;
+      if (e.target.id === 'ad') S.alertDays = Math.max(1, +e.target.value || 7);
+      await App.save(); toast('Configuração salva');
+    };
+    $('#bk').onclick = async () => { const r = await download(JSON.stringify(App.db, null, 1), `backup-gestao-${Fin.today()}.json`, 'JSON'); if (r) toast('Backup exportado'); };
+    $('#rs').onclick = async () => {
+      const t = await api.openText(); if (!t) return;
+      try { const d = JSON.parse(t); if (!d.payables || !d.receivables) throw 0;
+        confirmBox('Substituir todos os dados atuais pelo backup selecionado?', async () => { App.db = { ...App.defaults(), ...d }; await App.save(); App.render(); toast('Backup restaurado'); });
+      } catch { toast('Arquivo de backup inválido'); }
+    };
+    $('#im').onclick = async () => {
+      let d; try { d = await api.importXlsx(); } catch (e) { return toast('Não foi possível ler a planilha'); }
+      if (!d) return;
+      const n = d.payables.length + d.receivables.length;
+      d.payables.forEach(x => App.db.payables.push({ id: uid(), ...x, dataPgto: x.pago ? x.data : undefined }));
+      d.receivables.forEach(x => App.db.receivables.push({ id: uid(), ...x, dataPgto: x.pago ? x.data : undefined }));
+      for (const k of ['pagar', 'receber', 'formas']) d.categories[k].forEach(v => { if (!App.db.categories[k].includes(v)) App.db.categories[k].push(v); });
+      if (d.year) S.year = d.year; if (typeof d.openingBalance === 'number') S.openingBalance = d.openingBalance;
+      await App.save(); App.render(); toast(`${n} lançamento(s) importado(s)`);
+    };
+  }
+});
+
+App.start();</script></body></html>

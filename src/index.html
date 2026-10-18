@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'">
+<title>Gestão Financeira</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<aside id="sidebar">
+  <div class="brand"><span class="logo">$</span><div><b>Gestão</b><small>Financeira</small></div></div>
+  <nav id="nav"></nav>
+  <div class="side-foot"><span id="saveState">Dados salvos</span></div>
+</aside>
+<main id="main"></main>
+<div id="modalRoot"></div>
+<div id="toast"></div>
+<script src="app.js"></script>
+<script src="modules/dashboard.js"></script>
+<script src="modules/accounts.js"></script>
+<script src="modules/payables.js"></script>
+<script src="modules/receivables.js"></script>
+<script src="modules/cashflow.js"></script>
+<script src="modules/categories.js"></script>
+<script src="modules/settings.js"></script>
+<script src="modules/boot.js"></script>
+</body>
+</html>
