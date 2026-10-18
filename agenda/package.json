@@ -1,0 +1,20 @@
+{
+  "name": "agenda-facil",
+  "productName": "Agenda Fácil",
+  "version": "1.0.0",
+  "description": "Agenda de atendimentos com clientes, serviços, e-mail e WhatsApp",
+  "license": "MIT",
+  "homepage": "https://github.com/arcautopeca-dev/gestao-financeira-app-windows",
+  "author": { "name": "Agenda Fácil", "email": "arcautopeca@gmail.com" },
+  "main": "main.js",
+  "scripts": { "start": "electron .", "dist": "electron-builder --win nsis --publish never" },
+  "devDependencies": { "electron": "^33.2.0", "electron-builder": "^25.1.8" },
+  "build": {
+    "appId": "br.com.agendafacil",
+    "productName": "Agenda Fácil",
+    "directories": { "output": "dist" },
+    "files": ["main.js", "preload.js", "src/**/*", "build/**/*"],
+    "win": { "target": "nsis", "icon": "build/icon.png", "signAndEditExecutable": false },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true, "createStartMenuShortcut": true }
+  }
+}
